@@ -2,40 +2,37 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const agentTableRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const AGENTS_PER_PAGE = 10; // Adjust this number based on your needs
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+  // Move state declarations before the useEffect
+  const [agents] = useState([
+    { name: 'Selina', state: 'ACD', duration: '4:33' },
+    { name: 'Alonza', state: 'ACD', duration: '3:31' },
+    { name: 'KahCheong1', state: 'ACD', duration: '1:10' },
+    { name: 'Kevin', state: 'ACD', duration: '0:53' },
+    { name: 'Raidah', state: 'ACD', duration: '0:16' },
+    { name: 'Jeremy', state: 'ACW', duration: '2:57' },
+    { name: 'Jane', state: 'ACW', duration: '1:41' },
+    { name: 'Agent 1', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 2', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 3', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 4', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 5', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 6', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 7', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 8', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 9', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 10', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 11', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 12', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 13', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 14', state: 'AVAIL', duration: '76:14' },
+    
+    
+    // Add the rest of your agents here...
+  ]);
 
-    const scrollInterval = setInterval(() => {
-      if (agentTableRef.current) {
-        const { scrollHeight, clientHeight } = agentTableRef.current;
-        if (scrollHeight > clientHeight) {
-          if (scrollPosition >= scrollHeight - clientHeight) {
-            setScrollPosition(0);
-          } else {
-            setScrollPosition(prev => prev + clientHeight);
-          }
-        }
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(timer);
-      clearInterval(scrollInterval);
-    };
-  }, [scrollPosition]);
-
-  useEffect(() => {
-    if (agentTableRef.current) {
-      agentTableRef.current.scrollTop = scrollPosition;
-    }
-  }, [scrollPosition]);
-
-  // Combined skills data with both aggregate and individual skills
   const [skills] = useState([
     // Aggregate skills (displayed with highlighting)
     {
@@ -191,33 +188,44 @@ const WallboardDashboard = () => {
     // Add the rest of your individual skills here...
   ]);
 
-  // Agent data
-  const [agents] = useState([
-    { name: 'Selina', state: 'ACD', duration: '4:33' },
-    { name: 'Alonza', state: 'ACD', duration: '3:31' },
-    { name: 'KahCheong1', state: 'ACD', duration: '1:10' },
-    { name: 'Kevin', state: 'ACD', duration: '0:53' },
-    { name: 'Raidah', state: 'ACD', duration: '0:16' },
-    { name: 'Jeremy', state: 'ACW', duration: '2:57' },
-    { name: 'Jane', state: 'ACW', duration: '1:41' },
-    { name: 'Agent 1', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 2', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 3', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 4', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 5', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 6', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 7', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 8', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 9', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 10', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 11', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 12', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 13', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 14', state: 'AVAIL', duration: '76:14' },
-    
-    
-    // Add the rest of your agents here...
-  ]);
+  // Add state priority mapping
+  const statePriority = {
+    'ACD': 1,
+    'ACW': 2,
+    'AVAIL': 3,
+    'AUX': 4
+  };
+
+  // Sort function for agents
+  const sortAgents = (agents) => {
+    return [...agents].sort((a, b) => {
+      const priorityA = statePriority[a.state] || 999;
+      const priorityB = statePriority[b.state] || 999;
+      return priorityA - priorityB;
+    });
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    const pageTransitionInterval = setInterval(() => {
+      const totalPages = Math.ceil(agents.length / AGENTS_PER_PAGE);
+      setCurrentPage(current => (current + 1) % totalPages);
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(pageTransitionInterval);
+    };
+  }, [agents.length, AGENTS_PER_PAGE]);
+
+  // Apply sorting before slicing for display
+  const displayedAgents = sortAgents(agents).slice(
+    currentPage * AGENTS_PER_PAGE,
+    (currentPage + 1) * AGENTS_PER_PAGE
+  );
 
   // Get color based on SLA value
   const getSLAColor = (value) => {
@@ -308,10 +316,7 @@ const WallboardDashboard = () => {
 
         {/* Agent Status Table */}
         <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          <div 
-            ref={agentTableRef}
-            className="overflow-y-auto h-96 transition-all duration-1000 ease-in-out"
-          >
+          <div className="h-[600px]">
             <table className="w-full text-sm text-white">
               <thead className="bg-gray-700 sticky top-0">
                 <tr>
@@ -320,8 +325,8 @@ const WallboardDashboard = () => {
                   <th className="p-3">Duration</th>
                 </tr>
               </thead>
-              <tbody>
-                {agents.map((agent, index) => (
+              <tbody className="transition-all duration-500">
+                {displayedAgents.map((agent, index) => (
                   <tr key={index} className="border-b border-gray-700">
                     <td className="p-3">{agent.name}</td>
                     <td className={`p-3 text-center ${
