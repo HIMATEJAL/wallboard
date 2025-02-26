@@ -7,10 +7,23 @@ type Agent = {
   duration: string;
 };
 
+// Define a type for the state priority
+type StatePriority = {
+  [key: string]: number;
+};
+
 const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const AGENTS_PER_PAGE = 10; // Adjust this number based on your needs
+
+  // Add state priority mapping with proper type
+  const statePriority: StatePriority = {
+    'ACD': 1,
+    'ACW': 2,
+    'AVAIL': 3,
+    'AUX': 4
+  };
 
   // Move state declarations before the useEffect
   const [agents] = useState<Agent[]>([
@@ -194,14 +207,6 @@ const WallboardDashboard = () => {
     },
     // Add the rest of your individual skills here...
   ]);
-
-  // Add state priority mapping
-  const statePriority = {
-    'ACD': 1,
-    'ACW': 2,
-    'AVAIL': 3,
-    'AUX': 4
-  };
 
   // Sort function for agents
   const sortAgents = (agents: Agent[]) => {
