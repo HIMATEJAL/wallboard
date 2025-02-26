@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Define a type for the agent
+type Agent = {
+  name: string;
+  state: string;
+  duration: string;
+};
+
 const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const AGENTS_PER_PAGE = 10; // Adjust this number based on your needs
 
   // Move state declarations before the useEffect
-  const [agents] = useState([
+  const [agents] = useState<Agent[]>([
     { name: 'Selina', state: 'ACD', duration: '4:33' },
     { name: 'Alonza', state: 'ACD', duration: '3:31' },
     { name: 'KahCheong1', state: 'ACD', duration: '1:10' },
@@ -197,7 +204,7 @@ const WallboardDashboard = () => {
   };
 
   // Sort function for agents
-  const sortAgents = (agents) => {
+  const sortAgents = (agents: Agent[]) => {
     return [...agents].sort((a, b) => {
       const priorityA = statePriority[a.state] || 999;
       const priorityB = statePriority[b.state] || 999;
