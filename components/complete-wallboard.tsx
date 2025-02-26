@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const WallboardDashboard = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const AGENTS_PER_PAGE = 10; // Adjust this number based on your needs
 
@@ -18,10 +18,10 @@ const WallboardDashboard = () => {
     { name: 'Agent 2', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 3', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 4', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 5', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 6', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 7', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 8', state: 'AVAIL', duration: '76:14' },
+    { name: 'Agent 5', state: 'AUX - Coffee Break', duration: '76:14' },
+    { name: 'Agent 6', state: 'AUX - Lunch Break', duration: '76:14' },
+    { name: 'Agent 7', state: 'AUX - Tea Break', duration: '76:14' },
+    { name: 'Agent 8', state: 'AUX - Bathroom Break', duration: '76:14' },
     { name: 'Agent 9', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 10', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 11', state: 'AVAIL', duration: '76:14' },
@@ -206,6 +206,7 @@ const WallboardDashboard = () => {
   };
 
   useEffect(() => {
+    setCurrentTime(new Date());
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -255,14 +256,27 @@ const WallboardDashboard = () => {
     <div className="p-4 bg-white min-h-screen">
       {/* Header */}
       <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-4xl font-extrabold text-gray-800">Contact Center Wallboard</h1>
-        <div className="text-5xl font-bold text-blue-600">
-          {currentTime.toLocaleTimeString()}
+        <h1 className="text-4xl font-extrabold text-gray-800">Contact Centre Wallboard</h1>
+        <div className="text-right">
+          {currentTime && (
+            <>
+              <div className="text-2xl font-bold text-gray-600">
+                {new Intl.DateTimeFormat('en-GB', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric'
+                }).format(currentTime)}
+              </div>
+              <div className="text-5xl font-bold text-blue-600">
+                {currentTime.toLocaleTimeString('en-GB')}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-5 gap-4 mb-6">
         <div className="rounded-lg bg-blue-100 border-2 border-blue-500 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-blue-700">
             {skills.reduce((sum, skill) => sum + skill.avail, 0)}
@@ -287,6 +301,12 @@ const WallboardDashboard = () => {
           </div>
           <div className="text-base font-semibold text-green-600">Total Calls Today</div>
         </div>
+        <div className="rounded-lg bg-red-100 border-2 border-red-400 p-4 shadow-md">
+          <div className="text-3xl font-extrabold text-red-700">
+            {agents.filter(agent => agent.state === 'AUX').length}
+          </div>
+          <div className="text-base font-semibold text-red-600">Agents on Break</div>
+        </div>
       </div>
 
       {/* Main Content Grid */}
@@ -305,7 +325,6 @@ const WallboardDashboard = () => {
                 <th className="p-4 font-extrabold text-gray-700">CALLS</th>
                 <th className="p-4 font-extrabold text-gray-700">ABAN</th>
                 <th className="p-4 font-extrabold text-gray-700">%SVL</th>
-                <th className="p-4 font-extrabold text-gray-700">Ans'd</th>
                 <th className="p-4 font-extrabold text-gray-700">Aban'd</th>
                 <th className="p-4 font-extrabold text-gray-700">CallBack</th>
               </tr>
@@ -322,7 +341,6 @@ const WallboardDashboard = () => {
                   <td className="p-4 text-center text-gray-700">{skill.calls}</td>
                   <td className="p-4 text-center text-gray-700">{skill.aban}</td>
                   <td className={`p-4 text-center ${getSLAColor(skill.svl)}`}>{skill.svl}%</td>
-                  <td className="p-4 text-center text-gray-700">{skill.answered}</td>
                   <td className="p-4 text-center text-gray-700">{skill.abandoned}</td>
                   <td className="p-4 text-center text-gray-700">{skill.callback}</td>
                 </tr>
