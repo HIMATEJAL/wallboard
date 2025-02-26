@@ -7,9 +7,12 @@ type Agent = {
   duration: string;
 };
 
+// Define the possible agent states as a union type
+type AgentState = 'ACD' | 'ACW' | 'AVAIL' | 'AUX' | string;
+
 // Define a type for the state priority
 type StatePriority = {
-  [key: string]: number;
+  [key in AgentState]?: number;
 };
 
 const WallboardDashboard = () => {
@@ -211,8 +214,11 @@ const WallboardDashboard = () => {
   // Sort function for agents
   const sortAgents = (agents: Agent[]) => {
     return [...agents].sort((a, b) => {
-      const priorityA = statePriority[a.state] || 999;
-      const priorityB = statePriority[b.state] || 999;
+      // Use a safer approach to get priority values
+      const stateA = a.state as AgentState;
+      const stateB = b.state as AgentState;
+      const priorityA = statePriority[stateA] ?? 999;
+      const priorityB = statePriority[stateB] ?? 999;
       return priorityA - priorityB;
     });
   };
@@ -234,27 +240,27 @@ const WallboardDashboard = () => {
     };
   }, [agents.length, AGENTS_PER_PAGE]);
 
-  // Apply sorting before slicing for display
+  // Calculate which agents to show based on current page
   const displayedAgents = sortAgents(agents).slice(
     currentPage * AGENTS_PER_PAGE,
     (currentPage + 1) * AGENTS_PER_PAGE
   );
 
   // Get color based on SLA value
-  const getSLAColor = (value) => {
+  const getSLAColor = (value: number) => {
     if (value >= 85) return 'bg-green-100 text-green-700';
     if (value >= 80) return 'bg-orange-100 text-orange-700';
     return 'bg-red-100 text-red-700';
   };
 
   // Add threshold functions
-  const getAvailColor = (value) => {
+  const getAvailColor = (value: number) => {
     if (value >= 5) return 'bg-green-100 text-green-700';
     if (value >= 3) return 'bg-orange-100 text-orange-700';
     return 'bg-red-100 text-red-700';
   };
 
-  const getLongestWaitColor = (timeString) => {
+  const getLongestWaitColor = (timeString: string) => {
     // Convert time string (mm:ss) to seconds
     const [minutes, seconds] = timeString.split(':').map(Number);
     const totalSeconds = (minutes * 60) + seconds;
