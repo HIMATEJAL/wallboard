@@ -379,23 +379,23 @@ const WallboardDashboard = () => {
             <table className="w-full text-base text-gray-800">
               <thead className="bg-gray-100 sticky top-0">
                 <tr>
-                  <th className="p-2 text-left font-extrabold text-gray-700 text-base">Skill</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">AVAIL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">AUX</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">BUSY</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">QUEUE</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">WAIT</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">CALLS</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">%SVL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">M-SL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">M-ABN</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">ABN%</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">CB</th>
+                  <th className="p-2 text-left font-extrabold text-gray-700 text-lg">Skill</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">AVAIL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">AUX</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">BUSY</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">QUEUE</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">WAIT</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">CALLS</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%SVL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-SL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-ABN</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">ABN%</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">CB</th>
                 </tr>
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedSkills.map((skill, index) => (
-                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-2xl bg-blue-50' : 'font-medium text-2xl'} h-[80px]`}>
+                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-3xl bg-blue-50' : 'font-medium text-2xl'} h-[80px]`}>
                     <td className={`p-3 text-left ${skill.isAggregate ? 'text-blue-700' : 'text-gray-700'}`}>{skill.name}</td>
                     <td className={`p-3 text-center ${getAvailColor(skill.avail)}`}>{skill.avail}</td>
                     <td className="p-3 text-center text-gray-700">{skill.aux}</td>
