@@ -388,9 +388,9 @@ const WallboardDashboard = () => {
                   <th className="p-2 font-extrabold text-gray-700 text-lg">CALLS</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">CB</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">%SVL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-SL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-ABN</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">ABN%</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%M-SL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%M-ABN</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%ABN</th>
                 </tr>
               </thead>
               <tbody className="transition-all duration-500">
