@@ -386,11 +386,11 @@ const WallboardDashboard = () => {
                   <th className="p-2 font-extrabold text-gray-700 text-lg">QUEUE</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">WAIT</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">CALLS</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">%SVL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">%M-SL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">%M-ABN</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">%ABN</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">CB</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%SVL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-SL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-ABN</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">ABN%</th>
                 </tr>
               </thead>
               <tbody className="transition-all duration-500">
@@ -403,6 +403,7 @@ const WallboardDashboard = () => {
                     <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.queue}</td>
                     <td className={`p-3 text-center ${getLongestWaitColor(skill.longest)} ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.longest}</td>
                     <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.calls}</td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.callback}</td>
                     <td className={`p-3 text-center ${getSLAColor(skill.svl)} ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>
                       {skill.svl}
                     </td>
@@ -415,7 +416,6 @@ const WallboardDashboard = () => {
                     <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>
                       {skill.abandoned ? skill.abandoned.replace('%', '') : '0.0'}
                     </td>
-                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.callback}</td>
                   </tr>
                 ))}
               </tbody>
