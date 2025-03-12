@@ -147,7 +147,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'INTEREQ',
+      name: 'SPEX',
       avail: 1,
       aux: 1,
       busy: 0,
@@ -164,7 +164,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'PSS-INLIS',
+      name: 'PSS',
       avail: 1,
       aux: 2,
       busy: 0,
@@ -181,7 +181,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'P & A',
+      name: 'PAT',
       avail: 1,
       aux: 2,
       busy: 0,
@@ -198,7 +198,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'CUST ADM',
+      name: 'CAS',
       avail: 1,
       aux: 2,
       busy: 0,
@@ -215,7 +215,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'LNET3',
+      name: 'LN3',
       avail: 1,
       aux: 2,
       busy: 0,
@@ -230,24 +230,7 @@ const WallboardDashboard = () => {
       mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
-    },
-    {
-      name: 'CUSTOMS',
-      avail: 1,
-      aux: 2,
-      busy: 0,
-      queue: 0,
-      longest: '00:00',
-      calls: 29,
-      aban: 1,
-      svl: 86.2,
-      answered: '86.2%',
-      abandoned: '3.5%',
-      mtdSl: '86.2%',
-      mtdAbn: '3.5%',
-      callback: '0/1',
-      isAggregate: true
-    },
+    }
     // Add the rest of your individual skills here...
   ]);
 
