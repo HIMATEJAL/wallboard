@@ -1,5 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Define the missing types
+type StatePriority = {
+  [key: string]: number;
+};
+
+type Agent = {
+  name: string;
+  state: string;
+  duration: string;
+};
+
+type Skill = {
+  name: string;
+  avail: number;
+  aux: number;
+  busy: number;
+  queue: number;
+  longest: string;
+  calls: number;
+  aban?: number;
+  svl: number;
+  answered: string;
+  abandoned: string;
+  mtdSl?: string;
+  mtdAbn?: string;
+  callback: string;
+  isAggregate?: boolean;
+};
+
 const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
