@@ -1,31 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Define a type for the agent
-type Agent = {
-  name: string;
-  state: string;
-  duration: string;
-};
-
-// Define the possible agent states as a union type
-type AgentState = 'ACD' | 'ACW' | 'AVAIL' | 'AUX' | string;
-
-// Define a type for the state priority
-type StatePriority = {
-  [key in AgentState]?: number;
-};
-
 const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const AGENTS_PER_PAGE = 10; // Adjust this number based on your needs
+  const [currentSkillPage, setCurrentSkillPage] = useState(0);
+  const AGENTS_PER_PAGE = 10;
+  const SKILLS_PER_PAGE = 7;
 
   // Add state priority mapping with proper type
   const statePriority: StatePriority = {
     'ACD': 1,
     'ACW': 2,
     'AVAIL': 3,
-    'AUX': 4
+    'COFFEE BREAK': 4,
+    'LUNCH BREAK': 5,
+    'TEA BREAK': 6,
+    'BATHROOM BREAK': 7
   };
 
   // Move state declarations before the useEffect
@@ -41,10 +31,10 @@ const WallboardDashboard = () => {
     { name: 'Agent 2', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 3', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 4', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 5', state: 'AUX - Coffee Break', duration: '76:14' },
-    { name: 'Agent 6', state: 'AUX - Lunch Break', duration: '76:14' },
-    { name: 'Agent 7', state: 'AUX - Tea Break', duration: '76:14' },
-    { name: 'Agent 8', state: 'AUX - Bathroom Break', duration: '76:14' },
+    { name: 'Agent 5', state: 'COFFEE BREAK', duration: '76:14' },
+    { name: 'Agent 6', state: 'LUNCH BREAK', duration: '76:14' },
+    { name: 'Agent 7', state: 'TEA BREAK', duration: '76:14' },
+    { name: 'Agent 8', state: 'BATHROOM BREAK', duration: '76:14' },
     { name: 'Agent 9', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 10', state: 'AVAIL', duration: '76:14' },
     { name: 'Agent 11', state: 'AVAIL', duration: '76:14' },
@@ -56,7 +46,8 @@ const WallboardDashboard = () => {
     // Add the rest of your agents here...
   ]);
 
-  const [skills] = useState([
+  // Update the skills data to include the new fields
+  const [skills] = useState<Skill[]>([
     // Aggregate skills (displayed with highlighting)
     {
       name: 'GBL',
@@ -70,6 +61,8 @@ const WallboardDashboard = () => {
       svl: 85,
       answered: '82.9%',
       abandoned: '2.2%',
+      mtdSl: '87.5%',
+      mtdAbn: '2.0%',
       callback: '0/19',
       isAggregate: true
     },
@@ -85,6 +78,8 @@ const WallboardDashboard = () => {
       svl: 87,
       answered: '90.9%',
       abandoned: '0.0%',
+      mtdSl: '90.9%',
+      mtdAbn: '0.0%',
       callback: '0/0',
       isAggregate: true
     },
@@ -100,6 +95,8 @@ const WallboardDashboard = () => {
       svl: 83,
       answered: '86.2%',
       abandoned: '3.5%',
+      mtdSl: '86.2%',
+      mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
     },
@@ -115,7 +112,9 @@ const WallboardDashboard = () => {
       svl: 82.9,
       answered: '82.9%',
       abandoned: '2.2%',
-      callback: '0/19' ,
+      mtdSl: '82.9%',
+      mtdAbn: '2.2%',
+      callback: '0/19',
       isAggregate: true
     },
     {
@@ -130,6 +129,8 @@ const WallboardDashboard = () => {
       svl: 90.9,
       answered: '90.9%',
       abandoned: '0.0%',
+      mtdSl: '90.9%',
+      mtdAbn: '0.0%',
       callback: '0/0',
       isAggregate: true
     },
@@ -145,6 +146,8 @@ const WallboardDashboard = () => {
       svl: 86.2,
       answered: '86.2%',
       abandoned: '3.5%',
+      mtdSl: '86.2%',
+      mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
     },
@@ -160,6 +163,8 @@ const WallboardDashboard = () => {
       svl: 86.2,
       answered: '86.2%',
       abandoned: '3.5%',
+      mtdSl: '86.2%',
+      mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
     },
@@ -175,6 +180,8 @@ const WallboardDashboard = () => {
       svl: 86.2,
       answered: '86.2%',
       abandoned: '3.5%',
+      mtdSl: '86.2%',
+      mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
     },
@@ -190,6 +197,8 @@ const WallboardDashboard = () => {
       svl: 86.2,
       answered: '86.2%',
       abandoned: '3.5%',
+      mtdSl: '86.2%',
+      mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
     },
@@ -205,6 +214,8 @@ const WallboardDashboard = () => {
       svl: 86.2,
       answered: '86.2%',
       abandoned: '3.5%',
+      mtdSl: '86.2%',
+      mtdAbn: '3.5%',
       callback: '0/1',
       isAggregate: true
     },
@@ -214,11 +225,8 @@ const WallboardDashboard = () => {
   // Sort function for agents
   const sortAgents = (agents: Agent[]) => {
     return [...agents].sort((a, b) => {
-      // Use a safer approach to get priority values
-      const stateA = a.state as AgentState;
-      const stateB = b.state as AgentState;
-      const priorityA = statePriority[stateA] ?? 999;
-      const priorityB = statePriority[stateB] ?? 999;
+      const priorityA = statePriority[a.state] || 999;
+      const priorityB = statePriority[b.state] || 999;
       return priorityA - priorityB;
     });
   };
@@ -229,16 +237,22 @@ const WallboardDashboard = () => {
       setCurrentTime(new Date());
     }, 1000);
 
-    const pageTransitionInterval = setInterval(() => {
-      const totalPages = Math.ceil(agents.length / AGENTS_PER_PAGE);
-      setCurrentPage(current => (current + 1) % totalPages);
+    const agentPageTransitionInterval = setInterval(() => {
+      const totalAgentPages = Math.ceil(agents.length / AGENTS_PER_PAGE);
+      setCurrentPage(current => (current + 1) % totalAgentPages);
+    }, 5000);
+
+    const skillPageTransitionInterval = setInterval(() => {
+      const totalSkillPages = Math.ceil(skills.length / SKILLS_PER_PAGE);
+      setCurrentSkillPage(current => (current + 1) % totalSkillPages);
     }, 5000);
 
     return () => {
       clearInterval(timer);
-      clearInterval(pageTransitionInterval);
+      clearInterval(agentPageTransitionInterval);
+      clearInterval(skillPageTransitionInterval);
     };
-  }, [agents.length, AGENTS_PER_PAGE]);
+  }, [agents.length, skills.length, AGENTS_PER_PAGE, SKILLS_PER_PAGE]);
 
   // Calculate which agents to show based on current page
   const displayedAgents = sortAgents(agents).slice(
@@ -246,21 +260,27 @@ const WallboardDashboard = () => {
     (currentPage + 1) * AGENTS_PER_PAGE
   );
 
+  // Calculate which skills to show based on current page
+  const displayedSkills = skills.slice(
+    currentSkillPage * SKILLS_PER_PAGE,
+    (currentSkillPage + 1) * SKILLS_PER_PAGE
+  );
+
   // Get color based on SLA value
-  const getSLAColor = (value: number) => {
+  const getSLAColor = (value) => {
     if (value >= 85) return 'bg-green-100 text-green-700';
     if (value >= 80) return 'bg-orange-100 text-orange-700';
     return 'bg-red-100 text-red-700';
   };
 
   // Add threshold functions
-  const getAvailColor = (value: number) => {
+  const getAvailColor = (value) => {
     if (value >= 5) return 'bg-green-100 text-green-700';
     if (value >= 3) return 'bg-orange-100 text-orange-700';
     return 'bg-red-100 text-red-700';
   };
 
-  const getLongestWaitColor = (timeString: string) => {
+  const getLongestWaitColor = (timeString) => {
     // Convert time string (mm:ss) to seconds
     const [minutes, seconds] = timeString.split(':').map(Number);
     const totalSeconds = (minutes * 60) + seconds;
@@ -272,20 +292,20 @@ const WallboardDashboard = () => {
 
   return (
     <div className="p-4 bg-white min-h-screen">
-      {/* Header */}
+      {/* Header with further reduced size */}
       <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-4xl font-extrabold text-gray-800">Contact Centre Wallboard</h1>
+        <h1 className="text-2xl font-extrabold text-gray-800">Contact Centre Wallboard</h1>
         <div className="text-right">
           {currentTime && (
             <>
-              <div className="text-2xl font-bold text-gray-600">
+              <div className="text-base font-bold text-gray-600">
                 {new Intl.DateTimeFormat('en-GB', {
                   day: '2-digit',
                   month: 'short',
                   year: 'numeric'
                 }).format(currentTime)}
               </div>
-              <div className="text-5xl font-bold text-blue-600">
+              <div className="text-3xl font-bold text-blue-600">
                 {currentTime.toLocaleTimeString('en-GB')}
               </div>
             </>
@@ -293,37 +313,51 @@ const WallboardDashboard = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      {/* Summary Cards - Reduced font size and added two more boxes */}
+      <div className="grid grid-cols-7 gap-4 mb-6">
         <div className="rounded-lg bg-blue-100 border-2 border-blue-500 p-4 shadow-md">
-          <div className="text-3xl font-extrabold text-blue-700">
+          <div className="text-2xl font-extrabold text-blue-700">
             {skills.reduce((sum, skill) => sum + skill.avail, 0)}
           </div>
           <div className="text-base font-semibold text-blue-600">Available Agents</div>
         </div>
         <div className="rounded-lg bg-yellow-100 border-2 border-yellow-400 p-4 shadow-md">
-          <div className="text-3xl font-extrabold text-yellow-700">
+          <div className="text-2xl font-extrabold text-yellow-700">
             {skills.reduce((sum, skill) => sum + skill.busy, 0)}
           </div>
           <div className="text-base font-semibold text-yellow-600">Busy Agents</div>
         </div>
         <div className="rounded-lg bg-purple-100 border-2 border-purple-400 p-4 shadow-md">
-          <div className="text-3xl font-extrabold text-purple-700">
+          <div className="text-2xl font-extrabold text-purple-700">
             {skills.reduce((sum, skill) => sum + skill.queue, 0)}
           </div>
           <div className="text-base font-semibold text-purple-600">Calls in Queue</div>
         </div>
         <div className="rounded-lg bg-green-100 border-2 border-green-400 p-4 shadow-md">
-          <div className="text-3xl font-extrabold text-green-700">
+          <div className="text-2xl font-extrabold text-green-700">
             {skills.reduce((sum, skill) => sum + skill.calls, 0)}
           </div>
           <div className="text-base font-semibold text-green-600">Total Calls Today</div>
         </div>
         <div className="rounded-lg bg-red-100 border-2 border-red-400 p-4 shadow-md">
-          <div className="text-3xl font-extrabold text-red-700">
+          <div className="text-2xl font-extrabold text-red-700">
             {agents.filter(agent => agent.state === 'AUX').length}
           </div>
           <div className="text-base font-semibold text-red-600">Agents on Break</div>
+        </div>
+        <div className="rounded-lg bg-gray-100 border-2 border-gray-400 p-4 shadow-md">
+          <div className="text-2xl font-extrabold text-gray-700">
+            {/* Placeholder value - replace with actual data */}
+            {12}
+          </div>
+          <div className="text-base font-semibold text-gray-600">Agents Offline</div>
+        </div>
+        <div className="rounded-lg bg-indigo-100 border-2 border-indigo-400 p-4 shadow-md">
+          <div className="text-2xl font-extrabold text-indigo-700">
+            {/* Placeholder value - replace with actual data */}
+            {8}
+          </div>
+          <div className="text-base font-semibold text-indigo-600">CB/Email + Livechat</div>
         </div>
       </div>
 
@@ -331,66 +365,71 @@ const WallboardDashboard = () => {
       <div className="grid grid-cols-3 gap-6">
         {/* Combined Skills Table */}
         <div className="col-span-2 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
-          <table className="w-full text-base text-gray-800">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-4 text-left font-extrabold text-gray-700">Skill</th>
-                <th className="p-4 font-extrabold text-gray-700">AVAIL</th>
-                <th className="p-4 font-extrabold text-gray-700">AUX</th>
-                <th className="p-4 font-extrabold text-gray-700">BUSY</th>
-                <th className="p-4 font-extrabold text-gray-700">QUEUE</th>
-                <th className="p-4 font-extrabold text-gray-700">LONGEST</th>
-                <th className="p-4 font-extrabold text-gray-700">CALLS</th>
-                <th className="p-4 font-extrabold text-gray-700">ABAN</th>
-                <th className="p-4 font-extrabold text-gray-700">%SVL</th>
-                <th className="p-4 font-extrabold text-gray-700">Aban'd</th>
-                <th className="p-4 font-extrabold text-gray-700">CallBack</th>
-              </tr>
-            </thead>
-            <tbody>
-              {skills.map((skill, index) => (
-                <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-lg bg-blue-50' : 'font-medium'}`}>
-                  <td className={`p-4 text-left ${skill.isAggregate ? 'text-blue-700' : 'text-gray-700'}`}>{skill.name}</td>
-                  <td className={`p-4 text-center ${getAvailColor(skill.avail)}`}>{skill.avail}</td>
-                  <td className="p-4 text-center text-gray-700">{skill.aux}</td>
-                  <td className="p-4 text-center text-gray-700">{skill.busy}</td>
-                  <td className="p-4 text-center text-gray-700">{skill.queue}</td>
-                  <td className={`p-4 text-center ${getLongestWaitColor(skill.longest)}`}>{skill.longest}</td>
-                  <td className="p-4 text-center text-gray-700">{skill.calls}</td>
-                  <td className="p-4 text-center text-gray-700">{skill.aban}</td>
-                  <td className={`p-4 text-center ${getSLAColor(skill.svl)}`}>{skill.svl}%</td>
-                  <td className="p-4 text-center text-gray-700">{skill.abandoned}</td>
-                  <td className="p-4 text-center text-gray-700">{skill.callback}</td>
+          <div className="h-[600px]">
+            <table className="w-full text-base text-gray-800">
+              <thead className="bg-gray-100 sticky top-0">
+                <tr>
+                  <th className="p-2 text-left font-extrabold text-gray-700 text-base">Skill</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">AVAIL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">AUX</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">BUSY</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">QUEUE</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">LONGEST</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">CALLS</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">%SVL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">MTD SL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">MTD ABN</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">Aban'd</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">CallBack</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="transition-all duration-500">
+                {displayedSkills.map((skill, index) => (
+                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-xl bg-blue-50' : 'font-medium text-lg'} h-[80px]`}>
+                    <td className={`p-3 text-left ${skill.isAggregate ? 'text-blue-700' : 'text-gray-700'}`}>{skill.name}</td>
+                    <td className={`p-3 text-center ${getAvailColor(skill.avail)}`}>{skill.avail}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.aux}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.busy}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.queue}</td>
+                    <td className={`p-3 text-center ${getLongestWaitColor(skill.longest)}`}>{skill.longest}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.calls}</td>
+                    <td className={`p-3 text-center ${getSLAColor(skill.svl)}`}>{skill.svl}%</td>
+                    <td className="p-3 text-center text-gray-700">{skill.mtdSl || '0.0%'}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.mtdAbn || '0.0%'}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.abandoned}</td>
+                    <td className="p-3 text-center text-gray-700">{skill.callback}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* Agent Status Table */}
+        {/* Agent Status Table with increased font size */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
           <div className="h-[600px]">
             <table className="w-full text-base text-gray-800">
               <thead className="bg-gray-100 sticky top-0">
                 <tr>
-                  <th className="p-4 text-left font-extrabold text-gray-700">Agent</th>
-                  <th className="p-4 font-extrabold text-gray-700">State</th>
-                  <th className="p-4 font-extrabold text-gray-700">Duration</th>
+                  <th className="p-3 text-left font-extrabold text-gray-700 text-xl">Agent</th>
+                  <th className="p-3 font-extrabold text-gray-700 text-xl">State</th>
+                  <th className="p-3 font-extrabold text-gray-700 text-xl">Duration</th>
                 </tr>
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedAgents.map((agent, index) => (
-                  <tr key={index} className="border-b border-gray-200 text-lg font-medium hover:bg-gray-50">
-                    <td className="p-4 text-gray-700">{agent.name}</td>
-                    <td className={`p-4 text-center font-bold ${
+                  <tr key={index} className="border-b border-gray-200 text-xl font-medium hover:bg-gray-50 h-[55px]">
+                    <td className="p-3 text-gray-700">{agent.name}</td>
+                    <td className={`p-3 text-center font-bold ${
                       agent.state === 'AVAIL' ? 'text-green-600' :
                       agent.state === 'ACD' ? 'text-blue-600' :
                       agent.state === 'ACW' ? 'text-yellow-600' :
                       agent.state === 'AUX' ? 'text-purple-600' :
                       agent.state === 'RING' ? 'text-orange-600' :
+                      agent.state.includes('BREAK') ? 'text-red-600' :
                       'text-gray-600'
                     }`}>{agent.state}</td>
-                    <td className="p-4 text-center text-gray-700">{agent.duration}</td>
+                    <td className="p-3 text-center text-gray-700">{agent.duration}</td>
                   </tr>
                 ))}
               </tbody>
