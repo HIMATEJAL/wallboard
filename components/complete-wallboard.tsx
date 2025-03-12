@@ -329,45 +329,45 @@ const WallboardDashboard = () => {
           <div className="text-3xl font-extrabold text-blue-700">
             {skills.reduce((sum, skill) => sum + skill.avail, 0)}
           </div>
-          <div className="text-lg font-semibold text-blue-600">Available Agents</div>
+          <div className="text-lg font-semibold text-blue-600">Available</div>
         </div>
         <div className="rounded-lg bg-yellow-100 border-2 border-yellow-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-yellow-700">
             {skills.reduce((sum, skill) => sum + skill.busy, 0)}
           </div>
-          <div className="text-lg font-semibold text-yellow-600">Busy Agents</div>
+          <div className="text-lg font-semibold text-yellow-600">Busy</div>
         </div>
         <div className="rounded-lg bg-purple-100 border-2 border-purple-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-purple-700">
             {skills.reduce((sum, skill) => sum + skill.queue, 0)}
           </div>
-          <div className="text-lg font-semibold text-purple-600">Calls in Queue</div>
+          <div className="text-lg font-semibold text-purple-600">Queue</div>
         </div>
         <div className="rounded-lg bg-green-100 border-2 border-green-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-green-700">
             {skills.reduce((sum, skill) => sum + skill.calls, 0)}
           </div>
-          <div className="text-lg font-semibold text-green-600">Total Calls Today</div>
+          <div className="text-lg font-semibold text-green-600">Total Calls</div>
         </div>
         <div className="rounded-lg bg-red-100 border-2 border-red-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-red-700">
             {agents.filter(agent => agent.state === 'AUX').length}
           </div>
-          <div className="text-lg font-semibold text-red-600">Agents on Break</div>
+          <div className="text-lg font-semibold text-red-600">Break</div>
         </div>
         <div className="rounded-lg bg-gray-100 border-2 border-gray-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-gray-700">
             {/* Placeholder value - replace with actual data */}
             {12}
           </div>
-          <div className="text-lg font-semibold text-gray-600">Agents Offline</div>
+          <div className="text-lg font-semibold text-gray-600">Offline</div>
         </div>
         <div className="rounded-lg bg-indigo-100 border-2 border-indigo-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-indigo-700">
             {/* Placeholder value - replace with actual data */}
             {8}
           </div>
-          <div className="text-lg font-semibold text-indigo-600">CB/Email + Livechat</div>
+          <div className="text-lg font-semibold text-indigo-600">CB/Email/LC</div>
         </div>
       </div>
 
@@ -428,8 +428,8 @@ const WallboardDashboard = () => {
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedAgents.map((agent, index) => (
-                  <tr key={index} className="border-b border-gray-200 text-2xl font-medium hover:bg-gray-50 h-[55px]">
-                    <td className="p-3 text-gray-700">{agent.name}</td>
+                  <tr key={index} className="border-b border-gray-200 text-xl font-medium hover:bg-gray-50 h-[55px]">
+                    <td className="p-3 text-gray-700 font-bold">{agent.name}</td>
                     <td className={`p-3 text-center font-bold ${
                       agent.state === 'AVAIL' ? 'text-green-600' :
                       agent.state === 'ACD' ? 'text-blue-600' :
@@ -439,7 +439,7 @@ const WallboardDashboard = () => {
                       agent.state.includes('BREAK') ? 'text-red-600' :
                       'text-gray-600'
                     }`}>{agent.state}</td>
-                    <td className="p-3 text-center text-gray-700">{agent.duration}</td>
+                    <td className="p-3 text-center text-gray-700 font-bold">{agent.duration}</td>
                   </tr>
                 ))}
               </tbody>
