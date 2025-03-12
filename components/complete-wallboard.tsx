@@ -96,7 +96,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'GOBIZ',
+      name: 'GBP',
       avail: 2,
       aux: 5,
       busy: 2,
@@ -147,7 +147,7 @@ const WallboardDashboard = () => {
       isAggregate: true
     },
     {
-      name: 'SPEX',
+      name: 'SPX',
       avail: 1,
       aux: 1,
       busy: 0,
@@ -387,27 +387,35 @@ const WallboardDashboard = () => {
                   <th className="p-2 font-extrabold text-gray-700 text-lg">WAIT</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">CALLS</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">%SVL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-SL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">M-ABN</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-lg">ABN%</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%M-SL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%M-ABN</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-lg">%ABN</th>
                   <th className="p-2 font-extrabold text-gray-700 text-lg">CB</th>
                 </tr>
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedSkills.map((skill, index) => (
-                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-3xl bg-blue-50' : 'font-medium text-2xl'} h-[80px]`}>
-                    <td className={`p-3 text-left ${skill.isAggregate ? 'text-blue-700' : 'text-gray-700'}`}>{skill.name}</td>
-                    <td className={`p-3 text-center ${getAvailColor(skill.avail)}`}>{skill.avail}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.aux}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.busy}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.queue}</td>
-                    <td className={`p-3 text-center ${getLongestWaitColor(skill.longest)}`}>{skill.longest}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.calls}</td>
-                    <td className={`p-3 text-center ${getSLAColor(skill.svl)}`}>{skill.svl}%</td>
-                    <td className="p-3 text-center text-gray-700">{skill.mtdSl || '0.0%'}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.mtdAbn || '0.0%'}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.abandoned}</td>
-                    <td className="p-3 text-center text-gray-700">{skill.callback}</td>
+                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold bg-blue-50' : 'font-medium'} h-[80px]`}>
+                    <td className={`p-3 text-left ${skill.isAggregate ? 'text-blue-700 text-2xl' : 'text-gray-700 text-xl'}`}>{skill.name}</td>
+                    <td className={`p-3 text-center ${getAvailColor(skill.avail)} ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.avail}</td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.aux}</td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.busy}</td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.queue}</td>
+                    <td className={`p-3 text-center ${getLongestWaitColor(skill.longest)} ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.longest}</td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.calls}</td>
+                    <td className={`p-3 text-center ${getSLAColor(skill.svl)} ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>
+                      {skill.svl}
+                    </td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>
+                      {skill.mtdSl ? skill.mtdSl.replace('%', '') : '0.0'}
+                    </td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>
+                      {skill.mtdAbn ? skill.mtdAbn.replace('%', '') : '0.0'}
+                    </td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>
+                      {skill.abandoned ? skill.abandoned.replace('%', '') : '0.0'}
+                    </td>
+                    <td className={`p-3 text-center text-gray-700 ${skill.isAggregate ? 'text-3xl' : 'text-2xl'}`}>{skill.callback}</td>
                   </tr>
                 ))}
               </tbody>
