@@ -33,7 +33,7 @@ const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentSkillPage, setCurrentSkillPage] = useState(0);
-  const AGENTS_PER_PAGE = 10;
+  const AGENTS_PER_PAGE = 9;
   const SKILLS_PER_PAGE = 7;
 
   // Add state priority mapping with proper type
@@ -384,18 +384,18 @@ const WallboardDashboard = () => {
                   <th className="p-2 font-extrabold text-gray-700 text-base">AUX</th>
                   <th className="p-2 font-extrabold text-gray-700 text-base">BUSY</th>
                   <th className="p-2 font-extrabold text-gray-700 text-base">QUEUE</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">LONGEST</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">WAIT</th>
                   <th className="p-2 font-extrabold text-gray-700 text-base">CALLS</th>
                   <th className="p-2 font-extrabold text-gray-700 text-base">%SVL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">MTD SL</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">MTD ABN</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">Aban'd</th>
-                  <th className="p-2 font-extrabold text-gray-700 text-base">CallBack</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">M-SL</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">M-ABN</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">ABN%</th>
+                  <th className="p-2 font-extrabold text-gray-700 text-base">CB</th>
                 </tr>
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedSkills.map((skill, index) => (
-                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-2xl bg-blue-50' : 'font-medium text-xl'} h-[80px]`}>
+                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-2xl bg-blue-50' : 'font-medium text-2xl'} h-[80px]`}>
                     <td className={`p-3 text-left ${skill.isAggregate ? 'text-blue-700' : 'text-gray-700'}`}>{skill.name}</td>
                     <td className={`p-3 text-center ${getAvailColor(skill.avail)}`}>{skill.avail}</td>
                     <td className="p-3 text-center text-gray-700">{skill.aux}</td>
@@ -428,7 +428,7 @@ const WallboardDashboard = () => {
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedAgents.map((agent, index) => (
-                  <tr key={index} className="border-b border-gray-200 text-xl font-medium hover:bg-gray-50 h-[55px]">
+                  <tr key={index} className="border-b border-gray-200 text-2xl font-medium hover:bg-gray-50 h-[62px]">
                     <td className="p-3 text-gray-700 font-bold">{agent.name}</td>
                     <td className={`p-3 text-center font-bold ${
                       agent.state === 'AVAIL' ? 'text-green-600' :
