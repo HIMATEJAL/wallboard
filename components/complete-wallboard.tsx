@@ -302,20 +302,20 @@ const WallboardDashboard = () => {
 
   return (
     <div className="p-4 bg-white min-h-screen">
-      {/* Header with further reduced size */}
+      {/* Header with reduced size */}
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-extrabold text-gray-800">Contact Centre Wallboard</h1>
         <div className="text-right">
           {currentTime && (
             <>
-              <div className="text-base font-bold text-gray-600">
+              <div className="text-lg font-bold text-gray-600">
                 {new Intl.DateTimeFormat('en-GB', {
                   day: '2-digit',
                   month: 'short',
                   year: 'numeric'
                 }).format(currentTime)}
               </div>
-              <div className="text-3xl font-bold text-blue-600">
+              <div className="text-4xl font-bold text-blue-600">
                 {currentTime.toLocaleTimeString('en-GB')}
               </div>
             </>
@@ -323,51 +323,51 @@ const WallboardDashboard = () => {
         </div>
       </div>
 
-      {/* Summary Cards - Reduced font size and added two more boxes */}
+      {/* Summary Cards - Increased font size by 25% */}
       <div className="grid grid-cols-7 gap-4 mb-6">
         <div className="rounded-lg bg-blue-100 border-2 border-blue-500 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-blue-700">
+          <div className="text-3xl font-extrabold text-blue-700">
             {skills.reduce((sum, skill) => sum + skill.avail, 0)}
           </div>
-          <div className="text-base font-semibold text-blue-600">Available Agents</div>
+          <div className="text-lg font-semibold text-blue-600">Available Agents</div>
         </div>
         <div className="rounded-lg bg-yellow-100 border-2 border-yellow-400 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-yellow-700">
+          <div className="text-3xl font-extrabold text-yellow-700">
             {skills.reduce((sum, skill) => sum + skill.busy, 0)}
           </div>
-          <div className="text-base font-semibold text-yellow-600">Busy Agents</div>
+          <div className="text-lg font-semibold text-yellow-600">Busy Agents</div>
         </div>
         <div className="rounded-lg bg-purple-100 border-2 border-purple-400 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-purple-700">
+          <div className="text-3xl font-extrabold text-purple-700">
             {skills.reduce((sum, skill) => sum + skill.queue, 0)}
           </div>
-          <div className="text-base font-semibold text-purple-600">Calls in Queue</div>
+          <div className="text-lg font-semibold text-purple-600">Calls in Queue</div>
         </div>
         <div className="rounded-lg bg-green-100 border-2 border-green-400 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-green-700">
+          <div className="text-3xl font-extrabold text-green-700">
             {skills.reduce((sum, skill) => sum + skill.calls, 0)}
           </div>
-          <div className="text-base font-semibold text-green-600">Total Calls Today</div>
+          <div className="text-lg font-semibold text-green-600">Total Calls Today</div>
         </div>
         <div className="rounded-lg bg-red-100 border-2 border-red-400 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-red-700">
+          <div className="text-3xl font-extrabold text-red-700">
             {agents.filter(agent => agent.state === 'AUX').length}
           </div>
-          <div className="text-base font-semibold text-red-600">Agents on Break</div>
+          <div className="text-lg font-semibold text-red-600">Agents on Break</div>
         </div>
         <div className="rounded-lg bg-gray-100 border-2 border-gray-400 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-gray-700">
+          <div className="text-3xl font-extrabold text-gray-700">
             {/* Placeholder value - replace with actual data */}
             {12}
           </div>
-          <div className="text-base font-semibold text-gray-600">Agents Offline</div>
+          <div className="text-lg font-semibold text-gray-600">Agents Offline</div>
         </div>
         <div className="rounded-lg bg-indigo-100 border-2 border-indigo-400 p-4 shadow-md">
-          <div className="text-2xl font-extrabold text-indigo-700">
+          <div className="text-3xl font-extrabold text-indigo-700">
             {/* Placeholder value - replace with actual data */}
             {8}
           </div>
-          <div className="text-base font-semibold text-indigo-600">CB/Email + Livechat</div>
+          <div className="text-lg font-semibold text-indigo-600">CB/Email + Livechat</div>
         </div>
       </div>
 
@@ -395,7 +395,7 @@ const WallboardDashboard = () => {
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedSkills.map((skill, index) => (
-                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-xl bg-blue-50' : 'font-medium text-lg'} h-[80px]`}>
+                  <tr key={index} className={`border-b border-gray-200 ${skill.isAggregate ? 'font-bold text-2xl bg-blue-50' : 'font-medium text-xl'} h-[80px]`}>
                     <td className={`p-3 text-left ${skill.isAggregate ? 'text-blue-700' : 'text-gray-700'}`}>{skill.name}</td>
                     <td className={`p-3 text-center ${getAvailColor(skill.avail)}`}>{skill.avail}</td>
                     <td className="p-3 text-center text-gray-700">{skill.aux}</td>
@@ -415,7 +415,7 @@ const WallboardDashboard = () => {
           </div>
         </div>
 
-        {/* Agent Status Table with increased font size */}
+        {/* Agent Status Table */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
           <div className="h-[600px]">
             <table className="w-full text-base text-gray-800">
@@ -428,7 +428,7 @@ const WallboardDashboard = () => {
               </thead>
               <tbody className="transition-all duration-500">
                 {displayedAgents.map((agent, index) => (
-                  <tr key={index} className="border-b border-gray-200 text-xl font-medium hover:bg-gray-50 h-[55px]">
+                  <tr key={index} className="border-b border-gray-200 text-2xl font-medium hover:bg-gray-50 h-[55px]">
                     <td className="p-3 text-gray-700">{agent.name}</td>
                     <td className={`p-3 text-center font-bold ${
                       agent.state === 'AVAIL' ? 'text-green-600' :
