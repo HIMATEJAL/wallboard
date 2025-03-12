@@ -295,27 +295,25 @@ const WallboardDashboard = () => {
     (currentSkillPage + 1) * SKILLS_PER_PAGE
   );
 
+  // Get color based on available agents
+  const getAvailColor = (value: number) => {
+    if (value >= 5) return 'bg-green-100 text-green-700';
+    if (value >= 2) return 'bg-orange-100 text-orange-700';
+    return 'bg-red-100 text-red-700';
+  };
+
+  // Get color based on longest wait time
+  const getLongestWaitColor = (value: string) => {
+    const minutes = parseInt(value.split(':')[0]);
+    if (minutes < 2) return 'bg-green-100 text-green-700';
+    if (minutes < 5) return 'bg-orange-100 text-orange-700';
+    return 'bg-red-100 text-red-700';
+  };
+
   // Get color based on SLA value
-  const getSLAColor = (value) => {
+  const getSLAColor = (value: number) => {
     if (value >= 85) return 'bg-green-100 text-green-700';
     if (value >= 80) return 'bg-orange-100 text-orange-700';
-    return 'bg-red-100 text-red-700';
-  };
-
-  // Add threshold functions
-  const getAvailColor = (value) => {
-    if (value >= 5) return 'bg-green-100 text-green-700';
-    if (value >= 3) return 'bg-orange-100 text-orange-700';
-    return 'bg-red-100 text-red-700';
-  };
-
-  const getLongestWaitColor = (timeString) => {
-    // Convert time string (mm:ss) to seconds
-    const [minutes, seconds] = timeString.split(':').map(Number);
-    const totalSeconds = (minutes * 60) + seconds;
-    
-    if (totalSeconds <= 30) return 'bg-green-100 text-green-700';
-    if (totalSeconds <= 60) return 'bg-orange-100 text-orange-700';
     return 'bg-red-100 text-red-700';
   };
 
