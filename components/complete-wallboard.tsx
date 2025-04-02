@@ -33,6 +33,18 @@ const WallboardDashboard = () => {
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentSkillPage, setCurrentSkillPage] = useState(0);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [summary, setSummary] = useState({
+    TotalAUXagents:0,
+    TotalAgentsAvailable:0,
+    TotalAgentsBusy: 0,
+    TotalAgentsOffline:0,
+    "TotalCallback/Email + Chat": 0,
+    TotalCallsInQueue: 0,
+    TotalCallsHandledToday: 0
+    
+  });
   const AGENTS_PER_PAGE = 9;
   const SKILLS_PER_PAGE = 7;
 
@@ -47,192 +59,59 @@ const WallboardDashboard = () => {
     'BATHROOM BREAK': 7
   };
 
-  // Move state declarations before the useEffect
-  const [agents] = useState<Agent[]>([
-    { name: 'Selina', state: 'ACD', duration: '4:33' },
-    { name: 'Alonza', state: 'ACD', duration: '3:31' },
-    { name: 'KahCheong1', state: 'ACD', duration: '1:10' },
-    { name: 'Kevin', state: 'ACD', duration: '0:53' },
-    { name: 'Raidah', state: 'ACD', duration: '0:16' },
-    { name: 'Jeremy', state: 'ACW', duration: '2:57' },
-    { name: 'Jane', state: 'ACW', duration: '1:41' },
-    { name: 'Agent 1', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 2', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 3', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 4', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 5', state: 'COFFEE BREAK', duration: '76:14' },
-    { name: 'Agent 6', state: 'LUNCH BREAK', duration: '76:14' },
-    { name: 'Agent 7', state: 'TEA BREAK', duration: '76:14' },
-    { name: 'Agent 8', state: 'BATHROOM BREAK', duration: '76:14' },
-    { name: 'Agent 9', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 10', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 11', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 12', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 13', state: 'AVAIL', duration: '76:14' },
-    { name: 'Agent 14', state: 'AVAIL', duration: '76:14' },
-    
-    
-    // Add the rest of your agents here...
-  ]);
+ 
+  
 
-  // Update the skills data to include the new fields
-  const [skills] = useState<Skill[]>([
-    // Aggregate skills (displayed with highlighting)
-    {
-      name: 'GBL',
-      avail: 2,
-      aux: 2,
-      busy: 1,
-      queue: 0,
-      longest: '00:00',
-      calls: 207,
-      aban: 6,
-      svl: 85,
-      answered: '82.9%',
-      abandoned: '2.2%',
-      mtdSl: '87.5%',
-      mtdAbn: '2.0%',
-      callback: '0/19',
-      isAggregate: true
-    },
-    {
-      name: 'GBP',
-      avail: 2,
-      aux: 5,
-      busy: 2,
-      queue: 0,
-      longest: '00:00',
-      calls: 22,
-      aban: 0,
-      svl: 87,
-      answered: '90.9%',
-      abandoned: '0.0%',
-      mtdSl: '90.9%',
-      mtdAbn: '0.0%',
-      callback: '0/0',
-      isAggregate: true
-    },
-    {
-      name: 'TN',
-      avail: 4,
-      aux: 7,
-      busy: 1,
-      queue: 0,
-      longest: '00:00',
-      calls: 27,
-      aban: 1,
-      svl: 83,
-      answered: '86.2%',
-      abandoned: '3.5%',
-      mtdSl: '86.2%',
-      mtdAbn: '3.5%',
-      callback: '0/1',
-      isAggregate: true
-    },
-    {
-      name: 'eLIT',
-      avail: 2,
-      aux: 2,
-      busy: 1,
-      queue: 0,
-      longest: '00:00',
-      calls: 229,
-      aban: 5,
-      svl: 82.9,
-      answered: '82.9%',
-      abandoned: '2.2%',
-      mtdSl: '82.9%',
-      mtdAbn: '2.2%',
-      callback: '0/19',
-      isAggregate: true
-    },
-    {
-      name: 'SPX',
-      avail: 1,
-      aux: 1,
-      busy: 0,
-      queue: 0,
-      longest: '00:00',
-      calls: 22,
-      aban: 0,
-      svl: 90.9,
-      answered: '90.9%',
-      abandoned: '0.0%',
-      mtdSl: '90.9%',
-      mtdAbn: '0.0%',
-      callback: '0/0',
-      isAggregate: true
-    },
-    {
-      name: 'PSS',
-      avail: 1,
-      aux: 2,
-      busy: 0,
-      queue: 0,
-      longest: '00:00',
-      calls: 29,
-      aban: 1,
-      svl: 86.2,
-      answered: '86.2%',
-      abandoned: '3.5%',
-      mtdSl: '86.2%',
-      mtdAbn: '3.5%',
-      callback: '0/1',
-      isAggregate: true
-    },
-    {
-      name: 'PAT',
-      avail: 1,
-      aux: 2,
-      busy: 0,
-      queue: 0,
-      longest: '00:00',
-      calls: 29,
-      aban: 1,
-      svl: 86.2,
-      answered: '86.2%',
-      abandoned: '3.5%',
-      mtdSl: '86.2%',
-      mtdAbn: '3.5%',
-      callback: '0/1',
-      isAggregate: true
-    },
-    {
-      name: 'CAS',
-      avail: 1,
-      aux: 2,
-      busy: 0,
-      queue: 0,
-      longest: '00:00',
-      calls: 29,
-      aban: 1,
-      svl: 86.2,
-      answered: '86.2%',
-      abandoned: '3.5%',
-      mtdSl: '86.2%',
-      mtdAbn: '3.5%',
-      callback: '0/1',
-      isAggregate: true
-    },
-    {
-      name: 'LN3',
-      avail: 1,
-      aux: 2,
-      busy: 0,
-      queue: 0,
-      longest: '00:00',
-      calls: 29,
-      aban: 1,
-      svl: 86.2,
-      answered: '86.2%',
-      abandoned: '3.5%',
-      mtdSl: '86.2%',
-      mtdAbn: '3.5%',
-      callback: '0/1',
-      isAggregate: true
-    }
-    // Add the rest of your individual skills here...
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/api/hello'); 
+      const data = await response.json();
+      console.log("Fetched Data:", data);
+
+      if (data.Summary) {
+        setSummary(data.Summary);
+      }
+      console.log(data.Summary)
+
+      
+      const extractedAgents: Agent[] = data.AgentStatus.map((agent: any) => ({
+        name: agent.Username,
+        state: agent.StatusName,
+        duration: agent.TimeInStatus,
+      }));
+  
+      
+      const extractedSkills: Skill[] = data.QueuesData.map((queue: any) => {
+        const getMetricValue = (name: string) => {
+          const metric = queue.RTKPIMetrics.find((m: any) => m.Metric.Name === name);
+          return metric ? metric.Metric.Value : 0;
+        };
+  
+        return {
+          name: queue.QueueName,
+          avail: queue.AgentMetrics.find((m: any) => m.Metric.Name === 'AGENTS_AVAILABLE')?.Metric.Value || 0,
+          aux: queue.AgentMetrics.find((m: any) => m.Metric.Name === 'AGENTS_NON_PRODUCTIVE')?.Metric.Value || 0,
+          busy: queue.AgentMetrics.find((m: any) => m.Metric.Name === 'AGENTS_ON_CALL')?.Metric.Value || 0,
+          queue: queue.AgentMetrics.find((m: any) => m.Metric.Name === 'CONTACTS_IN_QUEUE')?.Metric.Value || 0,
+          longest: getMetricValue('MAX_QUEUED_TIME').toString(),
+          calls: getMetricValue('CONTACTS_HANDLED'),
+          aban: getMetricValue('CONTACTS_ABANDONED'),
+          svl: getMetricValue('SERVICE_LEVEL'),
+          answered: getMetricValue('AGENT_ANSWER_RATE').toFixed(2) + '%',
+          abandoned: getMetricValue('ABANDONMENT_RATE').toFixed(2) + '%',
+          callback: getMetricValue('SUM_RETRY_CALLBACK_ATTEMPTS').toString(),
+        };
+      });
+  
+      setAgents(extractedAgents);
+      setSkills(extractedSkills);
+    };
+  
+    fetchData();
+  }, []);
+
+  
+
 
   // Sort function for agents
   const sortAgents = (agents: Agent[]) => {
@@ -327,45 +206,43 @@ const WallboardDashboard = () => {
       <div className="grid grid-cols-7 gap-4 mb-6">
         <div className="rounded-lg bg-blue-100 border-2 border-blue-500 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-blue-700">
-            {skills.reduce((sum, skill) => sum + skill.avail, 0)}
+            {summary.TotalAgentsAvailable}
           </div>
           <div className="text-lg font-semibold text-blue-600">Available</div>
         </div>
         <div className="rounded-lg bg-yellow-100 border-2 border-yellow-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-yellow-700">
-            {skills.reduce((sum, skill) => sum + skill.busy, 0)}
+            {summary.TotalAgentsBusy}
           </div>
           <div className="text-lg font-semibold text-yellow-600">Busy</div>
         </div>
         <div className="rounded-lg bg-purple-100 border-2 border-purple-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-purple-700">
-            {skills.reduce((sum, skill) => sum + skill.queue, 0)}
+           {summary.TotalCallsInQueue}
           </div>
           <div className="text-lg font-semibold text-purple-600">Queue</div>
         </div>
         <div className="rounded-lg bg-green-100 border-2 border-green-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-green-700">
-            {skills.reduce((sum, skill) => sum + skill.calls, 0)}
+            {summary.TotalCallsHandledToday}
           </div>
           <div className="text-lg font-semibold text-green-600">Total Calls</div>
         </div>
         <div className="rounded-lg bg-red-100 border-2 border-red-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-red-700">
-            {agents.filter(agent => agent.state === 'AUX').length}
+            {summary.TotalAUXagents}
           </div>
           <div className="text-lg font-semibold text-red-600">Break</div>
         </div>
         <div className="rounded-lg bg-gray-100 border-2 border-gray-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-gray-700">
-            {/* Placeholder value - replace with actual data */}
-            {12}
+            {summary.TotalAgentsOffline}
           </div>
           <div className="text-lg font-semibold text-gray-600">Offline</div>
         </div>
         <div className="rounded-lg bg-indigo-100 border-2 border-indigo-400 p-4 shadow-md">
           <div className="text-3xl font-extrabold text-indigo-700">
-            {/* Placeholder value - replace with actual data */}
-            {8}
+            {summary['TotalCallback/Email + Chat']}
           </div>
           <div className="text-lg font-semibold text-indigo-600">CB/Email/LC</div>
         </div>
