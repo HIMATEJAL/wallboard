@@ -66,12 +66,11 @@ const WallboardDashboard = () => {
     const fetchData = async () => {
       const response = await fetch('/api/hello'); 
       const data = await response.json();
-      console.log("Fetched Data:", data);
+
 
       if (data.Summary) {
         setSummary(data.Summary);
       }
-      console.log(data.Summary)
 
       
       const extractedAgents: Agent[] = data.AgentStatus.map((agent: any) => ({
