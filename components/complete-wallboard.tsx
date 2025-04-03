@@ -66,12 +66,11 @@ const WallboardDashboard = () => {
     const fetchData = async () => {
       const response = await fetch('/api/hello'); 
       const data = await response.json();
-      console.log("Fetched Data:", data);
+
 
       if (data.Summary) {
         setSummary(data.Summary);
       }
-      console.log(data.Summary)
 
       
       const extractedAgents: Agent[] = data.AgentStatus.map((agent: any) => ({
@@ -86,6 +85,10 @@ const WallboardDashboard = () => {
           const metric = queue.RTKPIMetrics.find((m: any) => m.Metric.Name === name);
           return metric ? metric.Metric.Value : 0;
         };
+        const getMstdl = (name: string) => {
+          const metric = queue.Month_to_date.find((m: any) => m.Metric.Name == name);
+          return metric ? metric.Metric.Value : 0;
+        };
   
         return {
           name: queue.QueueName,
@@ -96,10 +99,13 @@ const WallboardDashboard = () => {
           longest: getMetricValue('MAX_QUEUED_TIME').toString(),
           calls: getMetricValue('CONTACTS_HANDLED'),
           aban: getMetricValue('CONTACTS_ABANDONED'),
-          svl: getMetricValue('SERVICE_LEVEL'),
+          svl: getMetricValue('SERVICE_LEVEL').toFixed(2),
           answered: getMetricValue('AGENT_ANSWER_RATE').toFixed(2) + '%',
           abandoned: getMetricValue('ABANDONMENT_RATE').toFixed(2) + '%',
           callback: getMetricValue('SUM_RETRY_CALLBACK_ATTEMPTS').toString(),
+          mtdSl: getMstdl('SERVICE_LEVEL'),
+          mtdAbn:getMstdl('ABANDONMENT_RATE')
+          
         };
       });
   
